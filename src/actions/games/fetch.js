@@ -1,5 +1,3 @@
-// src/actions/games/fetch.js
-
 import API from '../../api/client'
 import {
   APP_LOADING,
