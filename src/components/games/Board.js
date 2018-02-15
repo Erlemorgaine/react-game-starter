@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { connect as subscribeToWebsocket } from '../../actions/websocket'
 import { updateGame } from '../../actions/game/update'
 import './Board.css'
 
@@ -35,19 +36,19 @@ class Board extends PureComponent {
 
   setGame(i) {
     const tempSquares = this.props.game.squares.slice()
-    let gameTurn = 0
+    let gameTurn = this.props.game.turn
 
-    if (calculateWinner(tempSquares) || tempSquares[i] /*|| !this.props.singleGame.xIsNext*/) {
+    if (calculateWinner(tempSquares) || tempSquares[i] || !this.props.hasTurn) {
       return
     }
 
     if (this.props.hasTurn === true) {
-      gameTurn = 0
-    } else {
       gameTurn = 1
+    } else {
+      gameTurn = 0
     }
 
-    console.log(`gameTurn: ${gameTurn}, hasTurn: ${this.props.hasTurn}`)
+    console.log(this.props.hasTurn)
 
     tempSquares[i] = this.props.game.turn === 0 ? this.props.game.symbol[0] : this.props.game.symbol[1]
 
@@ -58,7 +59,6 @@ class Board extends PureComponent {
       squares: tempSquares,
       turn: gameTurn
     }
-    console.log(newState)
     this.props.updateGame(newState)
   }
 
@@ -72,6 +72,7 @@ class Board extends PureComponent {
   }
 
   render() {
+    console.log(this.props.game.turn)
     const winner = calculateWinner(this.props.game.squares)
     let status = 'Winner: ';
     if (winner === 'X') {
@@ -108,4 +109,7 @@ const mapStateToProps = ({ singleGame }) => ({
   singleGame
 })
 
-export default connect(mapStateToProps, { updateGame })(Board)
+export default connect(mapStateToProps, {
+  updateGame,
+  subscribeToWebsocket,
+})(Board)
