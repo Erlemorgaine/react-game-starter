@@ -1,4 +1,3 @@
-// src/actions/websocket.js
 import io from 'socket.io-client'
 import { push } from 'react-router-redux'
 import API from '../api/client'
@@ -27,7 +26,7 @@ export const connect = () => {
       }
     })
 
-    socket.on('action', dispatch)
+    socket.on('action', dispatch, data => console.log("Hello there I'm connected"))
     dispatch({ type: CONNECTED_TO_WEBSOCKET })
   }
 }

@@ -25,8 +25,9 @@ class Game extends PureComponent {
       updatedAt: PropTypes.string.isRequired,
       createdAt: PropTypes.string.isRequired,
       started: PropTypes.bool,
-      turn: PropTypes.number.isRequired,
-      symbol: PropTypes.array
+      turn: PropTypes.number,//.isRequired,
+      symbol: PropTypes.array,
+      squares: PropTypes.array
       // cards: PropTypes.arrayOf(PropTypes.shape({
       //   symbol: PropTypes.string,
       //   _id: PropTypes.string,

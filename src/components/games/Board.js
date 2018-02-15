@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import updateGame from '../../actions/game/update'
+import { updateGame } from '../../actions/game/update'
 import './Board.css'
 
 function Square(props) {
@@ -34,33 +34,52 @@ function calculateWinner(squares) {
 class Board extends PureComponent {
 
   setGame(i) {
-    const tempSquares = this.props.singleGame.squares.slice()
-    if (calculateWinner(tempSquares) || tempSquares[i] || !this.props.singleGame.xIsNext) {
+    const tempSquares = this.props.game.squares.slice()
+    let gameTurn = 0
+
+    if (calculateWinner(tempSquares) || tempSquares[i] /*|| !this.props.singleGame.xIsNext*/) {
       return
     }
 
-    tempSquares[i] = this.props.singleGame.xIsNext ? this.props.game.symbol[0] : this.props.game.symbol[1]
+    if (this.props.hasTurn === true) {
+      gameTurn = 0
+    } else {
+      gameTurn = 1
+    }
 
-    let newState = {...this.state, squares: tempSquares, xIsNext: !this.props.singleGame.xIsNext}
+    console.log(`gameTurn: ${gameTurn}, hasTurn: ${this.props.hasTurn}`)
+
+    tempSquares[i] = this.props.game.turn === 0 ? this.props.game.symbol[0] : this.props.game.symbol[1]
+
+    let newState = {
+      _id: this.props.game._id,
+      userId: this.props.game.userId,
+      players: this.props.game.players,
+      squares: tempSquares,
+      turn: gameTurn
+    }
+    console.log(newState)
     this.props.updateGame(newState)
   }
 
   renderSquare(i) {
     return(
       <Square
-        value={this.props.singleGame.squares[i]}
+        value={this.props.game.squares[i]}
         onClick={() => this.setGame(i)}
       />
     )
   }
 
   render() {
-    const winner = calculateWinner(this.props.singleGame.squares)
-    let status;
-    if (winner) {
-      status = 'Winner: ' + winner
+    const winner = calculateWinner(this.props.game.squares)
+    let status = 'Winner: ';
+    if (winner === 'X') {
+      status += this.props.game.players[0].name
+    } else if (winner === 'O') {
+      status += this.props.game.players[1].name
     } else {
-      status = 'Next player: ' + (this.props.singleGame.xIsNext ? this.props.game.players[0].name : this.props.game.players[1].name)
+      status = 'Next player: ' + (this.props.game.turn === 0 ? this.props.game.players[0].name : this.props.game.players[1].name)
     }
     return (
       <div>
