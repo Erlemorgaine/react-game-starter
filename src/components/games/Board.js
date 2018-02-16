@@ -42,15 +42,15 @@ class Board extends PureComponent {
       return
     }
 
-    if (this.props.hasTurn === true) {
+    tempSquares[i] = this.props.game.turn === 0 ? this.props.game.symbol[0] : this.props.game.symbol[1]
+
+    if (this.props.game.turn === 0) {
       gameTurn = 1
-    } else {
+    } else if (this.props.game.turn === 1) {
       gameTurn = 0
     }
 
-    console.log(this.props.hasTurn)
-
-    tempSquares[i] = this.props.game.turn === 0 ? this.props.game.symbol[0] : this.props.game.symbol[1]
+    console.log(gameTurn)
 
     let newState = {
       _id: this.props.game._id,
@@ -72,7 +72,6 @@ class Board extends PureComponent {
   }
 
   render() {
-    console.log(this.props.game.turn)
     const winner = calculateWinner(this.props.game.squares)
     let status = 'Winner: ';
     if (winner === 'X') {
